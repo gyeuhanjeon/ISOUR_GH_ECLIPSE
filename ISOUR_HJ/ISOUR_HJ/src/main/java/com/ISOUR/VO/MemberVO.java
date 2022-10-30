@@ -8,6 +8,7 @@ public class MemberVO {
 	private String name;
 	private String gender;
 	private String birth;
+	private String age;
 	private String region1;
 	private String region2;
 	
@@ -41,6 +42,12 @@ public class MemberVO {
 	}
 	public void setBirth(String birth) {
 		this.birth = birth;
+	}
+	public String getAge() {
+		return age;
+	}
+	public void setAge(String age) {
+		this.age = age;
 	}
 	public String getRegion1() {
 		return region1;

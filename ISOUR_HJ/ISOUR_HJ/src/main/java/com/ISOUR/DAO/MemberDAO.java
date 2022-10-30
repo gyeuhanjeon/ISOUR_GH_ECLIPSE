@@ -65,6 +65,7 @@ public class MemberDAO {
 				String name = rs.getString("NAME");
 				String gender = rs.getString("GENDER");
 				String birth = rs.getString("BIRTH");
+				String age = rs.getString("AGE");
 				String region1 = rs.getString("REGION1");
 				String region2 = rs.getString("REGION2");
 				
@@ -73,6 +74,7 @@ public class MemberDAO {
 				vo.setName(name);
 				vo.setGender(gender);
 				vo.setBirth(birth);
+				vo.setAge(age);
 				vo.setRegion1(region1);
 				vo.setRegion2(region2);
 				
@@ -112,11 +114,11 @@ public class MemberDAO {
 		return isNotReg;  // 가입되어 있으면 false, 가입 안되어 있으면 true.
 	}
 	// 회원가입
-	public boolean memberRegister(String id, String pwd, String name, String gender, String birth, String region1, String region2) {
+	public boolean memberRegister(String id, String pwd, String name, String gender, String birth, String age, String region1, String region2) {
 		
-		System.out.println("여기까지 오냐..?" + id + "/" + pwd + "/" + name + "/" + gender + "/" + birth + "/" + region1 + "/" + region2);
+		System.out.println("여기까지 오냐..?" + id + "/" + pwd + "/" + name + "/" + gender + "/" + birth + "/"+ age + "/" + region1 + "/" + region2);
 		int result = 0;
-		String sql = "INSERT INTO I_MEMBER(ID, PWD, NAME, GENDER, BIRTH, REGION1, REGION2) VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO I_MEMBER(ID, PWD, NAME, GENDER, BIRTH, AGE, REGION1, REGION2) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			conn = Common.getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -125,11 +127,13 @@ public class MemberDAO {
 			pstmt.setString(3, name);
 			pstmt.setString(4, gender);
 			pstmt.setString(5, birth);
-			pstmt.setString(6, region1);
-			pstmt.setString(7, region2);
+			pstmt.setString(6, age);
+			pstmt.setString(7, region1);
+			pstmt.setString(8, region2);
 			result = pstmt.executeUpdate();	
 			System.out.println("여기까지 와라....2");
 			System.out.println("회원 가입 DB 결과 확인 : " + result);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,29 +148,25 @@ public class MemberDAO {
 	
 	
 	// 회원탈퇴
-	public boolean MemOutCheck(String id) {
-		int isOut = 0;
-		String sql = "DELETE FROM I_MEMBER WHERE ID = " + "'" + id +"'";
-		
-		
-		System.out.println("rs뭐냐 ID : " + id);
-		
+	public boolean regidOut(String id) {
+		boolean isNotReg = false;
 		try {
 			conn = Common.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			isOut = pstmt.executeUpdate();
+			stmt = conn.createStatement();
+			String sql = "DELETE FROM I_MEMBER WHERE ID = " + "'" + id +"'";
+			rs = stmt.executeQuery(sql);
 			
-			System.out.println("rs뭐냐" + isOut);
+			System.out.println("rs 값이 뭐가나올까 ? " + rs.next());
 			
+			if(rs.next()) isNotReg = false;
+			else isNotReg = true;
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		Common.close(rs);
 		Common.close(stmt);
 		Common.close(conn);
-		
-		if(isOut == 1) return true;
-		else return false;
+		return isNotReg; // 가입 되어 있으면 false, 가입이 안되어 있으면 true
 	}
 
 }
